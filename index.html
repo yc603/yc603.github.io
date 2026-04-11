@@ -14,19 +14,18 @@ body {
   color: white;
 }
 
-/* 页面基础 */
+/* ===== 通用页面 ===== */
 .page {
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  text-align: center;
 }
 
 .hidden { display: none; }
 
-/* 按钮 */
+/* ===== 按钮 ===== */
 button {
   padding: 12px;
   margin: 8px;
@@ -38,75 +37,63 @@ button {
   max-width: 320px;
 }
 
-/* 正确错误 */
+/* 正误 */
 .correct { background: #2ecc71 !important; }
 .wrong { background: #e74c3c !important; }
 
-/* 🎆 过渡页（打字） */
+/* ===== 过渡页 ===== */
 #transition {
   background: black;
   color: white;
-  font-size: 30px;
+  font-size: 28px;
 }
 
-/* =========================
-   🌟 最终页面 VW 风格设计
-========================= */
+/* ===== 最后一页（滚动结构） ===== */
+.final-wrapper {
+  height: 100vh;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+}
 
-.final-page {
-  min-height: 100vh;
+/* 每一屏 */
+.section {
+  height: 100vh;
+  scroll-snap-align: start;
   display: flex;
-  flex-direction: column;
   justify-content: center;
-  padding: 40px;
+  align-items: center;
+  flex-direction: column;
+
+  opacity: 0;
+  transform: translateY(40px);
+  transition: 0.8s;
   background: rgba(0,0,0,0.55);
+  padding: 40px;
+  text-align: center;
 }
 
-/* 大标题 */
-.hero-title {
+.section.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.title {
   font-size: 40px;
   font-weight: bold;
-  letter-spacing: 2px;
-  margin-bottom: 10px;
 }
 
-/* 副标题 */
-.hero-sub {
-  font-size: 16px;
+.sub {
+  margin-top: 10px;
   opacity: 0.8;
-  margin-bottom: 40px;
 }
 
-/* 分区（类似 VW 卡片） */
-.vw-block {
-  border-left: 3px solid #ff4fa3;
-  padding: 15px 20px;
-  margin: 20px 0;
-  background: rgba(255,255,255,0.08);
-  backdrop-filter: blur(8px);
-  border-radius: 10px;
-}
-
-/* 图片 */
 img, video {
-  width: 100%;
-  border-radius: 12px;
+  width: 80%;
+  max-width: 400px;
+  border-radius: 15px;
 }
 
-/* ⬇️ 探索 */
-.scroll-hint {
-  margin-top: 40px;
-  font-size: 14px;
-  opacity: 0.7;
-  animation: bounce 1.5s infinite;
-}
-
-@keyframes bounce {
-  0%,100% { transform: translateY(0); }
-  50% { transform: translateY(10px); }
-}
-
-/* 💖 单颗爱心 */
+/* 💖 单爱心 */
 .heart {
   position: fixed;
   font-size: 22px;
@@ -139,34 +126,31 @@ img, video {
   <div id="transitionText"></div>
 </div>
 
-<!-- 🎂 最终页面（VW风格） -->
+<!-- 🎂 最终页 -->
 <div id="birthday" class="hidden">
 
-  <div class="final-page">
+  <div class="final-wrapper">
 
-    <div class="hero-title">生日快乐 🎂</div>
-    <div id="typing"></div>
-    <div class="hero-sub">A special moment, just for you</div>
-
-    <div class="vw-block">
-      🎉 今天是属于你的特别一天<br>
-      愿你永远自由、快乐、闪闪发光
+    <div class="section">
+      <div class="title">生日快乐 🎂</div>
+      <div class="sub" id="typing"></div>
     </div>
 
-    <div class="vw-block">
-      🖼️ 回忆片段
+    <div class="section">
+      <div class="title">祝福</div>
+      <div class="sub">愿你永远闪闪发光 ✨</div>
+    </div>
+
+    <div class="section">
+      <div class="title">回忆</div>
       <img src="https://via.placeholder.com/400">
     </div>
 
-    <div class="vw-block">
-      🎥 一段话想给你
+    <div class="section">
+      <div class="title">视频</div>
       <video controls>
         <source src="your-video.mp4">
       </video>
-    </div>
-
-    <div class="scroll-hint">
-      探索更多 ⬇
     </div>
 
   </div>
@@ -174,6 +158,10 @@ img, video {
 </div>
 
 <script>
+
+/* ===== 修复：DOM安全引用 ===== */
+const questionEl = document.getElementById("question");
+const optionsEl = document.getElementById("options");
 
 /* ===== 题目 ===== */
 const questions = [
@@ -191,33 +179,30 @@ const questions = [
 
 let current = 0;
 
-/* ===== 打字题目（更慢） ===== */
+/* ===== 题目打字（慢） ===== */
 function loadQuestion(){
   const q = questions[current];
 
-  typeText(q.q, question);
+  typeText(q.q, questionEl, 120); // 👈 放慢
 
-  options.innerHTML = "";
+  optionsEl.innerHTML = "";
 
   q.options.forEach((opt,i)=>{
     let btn=document.createElement("button");
     btn.innerText=opt;
-
     btn.onclick=()=>check(btn,i);
-
-    options.appendChild(btn);
+    optionsEl.appendChild(btn);
   });
 }
 
-/* 慢一点 */
-function typeText(text, el){
+function typeText(text, el, speed){
   el.innerHTML="";
   let i=0;
   let t=setInterval(()=>{
     el.innerHTML+=text[i];
     i++;
     if(i>=text.length) clearInterval(t);
-  },120); // 👈 放慢
+  },speed);
 }
 
 /* ===== 答题 ===== */
@@ -232,8 +217,7 @@ function check(btn,i){
       }else{
         showTransition();
       }
-    },500);
-
+    },400);
   }else{
     btn.classList.add("wrong");
     setTimeout(()=>btn.classList.remove("wrong"),400);
@@ -246,33 +230,20 @@ function showTransition(){
   transition.classList.remove("hidden");
   music.play();
 
-  typeCenter("生日快乐 🎂",()=>{
+  typeText("生日快乐 🎂", transitionText, 120);
+
+  setTimeout(()=>{
     transition.classList.add("hidden");
     birthday.classList.remove("hidden");
-    startFinalTyping();
-  });
-}
-
-/* 中间打字 */
-function typeCenter(text, cb){
-  let el=document.getElementById("transitionText");
-  el.innerHTML="";
-  let i=0;
-
-  let t=setInterval(()=>{
-    el.innerHTML+=text[i];
-    i++;
-    if(i>=text.length){
-      clearInterval(t);
-      setTimeout(cb,800);
-    }
-  },120);
+    startTyping();
+    revealSections();
+  },2000);
 }
 
 /* ===== 最终打字 ===== */
-function startFinalTyping(){
-  let text="愿你在未来的每一天，都比今天更快乐一点 ❤️";
-  let el=document.getElementById("typing");
+function startTyping(){
+  const el = document.getElementById("typing");
+  let text = "愿你每天都比昨天更快乐一点 ❤️";
   let i=0;
 
   let t=setInterval(()=>{
@@ -282,19 +253,34 @@ function startFinalTyping(){
   },90);
 }
 
-/* ===== 💖 单个爱心 ===== */
+/* ===== 滚动出现 ===== */
+function revealSections(){
+  const secs = document.querySelectorAll(".section");
+
+  function check(){
+    secs.forEach(s=>{
+      if(s.getBoundingClientRect().top < window.innerHeight*0.8){
+        s.classList.add("show");
+      }
+    });
+  }
+
+  window.addEventListener("scroll",check);
+  check();
+}
+
+/* ===== 💖 单爱心 ===== */
 document.addEventListener("click",e=>{
   let h=document.createElement("div");
   h.className="heart";
   h.innerHTML="💖";
   h.style.left=e.clientX+"px";
   h.style.top=e.clientY+"px";
-
   document.body.appendChild(h);
-
   setTimeout(()=>h.remove(),1000);
 });
 
+/* ===== 初始化 ===== */
 loadQuestion();
 
 </script>
