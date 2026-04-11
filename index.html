@@ -10,11 +10,39 @@ body {
   margin: 0;
   font-family: Arial;
   overflow-x: hidden;
-  background: url("your-bg.jpg") no-repeat center center/cover;
+  background: #000;
   color: white;
 }
 
-/* 页面 */
+/* =========================
+   🎬 开场动画
+========================= */
+#intro {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100vh;
+  background: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 999;
+}
+
+.intro-text {
+  font-size: 28px;
+  opacity: 0;
+  animation: fadeIn 2s forwards;
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+/* =========================
+   🧠 答题
+========================= */
 .page {
   min-height: 100vh;
   display: flex;
@@ -22,11 +50,11 @@ body {
   align-items: center;
   flex-direction: column;
   text-align: center;
+  background: url("your-bg.jpg") no-repeat center center/cover;
 }
 
 .hidden { display: none; }
 
-/* 按钮 */
 button {
   padding: 12px;
   margin: 8px;
@@ -38,62 +66,63 @@ button {
   max-width: 320px;
 }
 
-/* 正确/错误 */
 .correct { background: #2ecc71 !important; }
 .wrong { background: #e74c3c !important; }
 
-/* 过渡页 */
+/* =========================
+   🎬 过渡
+========================= */
 #transition {
   background: black;
   font-size: 28px;
 }
 
-/* ===== VW风格最终页 ===== */
-.final-page {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 40px;
-  background: rgba(0,0,0,0.55);
+/* =========================
+   📱 Story模式（重点）
+========================= */
+.story-wrapper {
+  height: 100vh;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
 }
 
-.hero-title {
+/* 每一屏 */
+.story {
+  height: 100vh;
+  scroll-snap-align: start;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 40px;
+  text-align: center;
+
+  opacity: 0;
+  transform: translateY(40px);
+  transition: 0.8s;
+
+  background: rgba(0,0,0,0.6);
+}
+
+.story.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.title {
   font-size: 40px;
   font-weight: bold;
-  letter-spacing: 2px;
 }
 
-.hero-sub {
-  font-size: 16px;
-  opacity: 0.8;
+.sub {
   margin-top: 10px;
-}
-
-.vw-block {
-  border-left: 3px solid #ff4fa3;
-  padding: 15px 20px;
-  margin: 20px 0;
-  background: rgba(255,255,255,0.08);
-  backdrop-filter: blur(8px);
-  border-radius: 10px;
+  opacity: 0.8;
 }
 
 img, video {
-  width: 100%;
-  border-radius: 12px;
-}
-
-.scroll-hint {
-  margin-top: 30px;
-  font-size: 14px;
-  opacity: 0.7;
-  animation: bounce 1.5s infinite;
-}
-
-@keyframes bounce {
-  0%,100% { transform: translateY(0); }
-  50% { transform: translateY(10px); }
+  width: 85%;
+  max-width: 400px;
+  border-radius: 15px;
 }
 
 /* 💖 单爱心 */
@@ -113,50 +142,47 @@ img, video {
 
 <body>
 
-<!-- 🎵 音乐 -->
-<audio id="music" loop>
-  <source src="your-music.mp3">
-</audio>
+<!-- 🎬 开场动画 -->
+<div id="intro">
+  <div class="intro-text" id="introText">准备进入特别的一天...</div>
+</div>
 
 <!-- 🧠 答题 -->
-<div id="quiz" class="page">
+<div id="quiz" class="page hidden">
   <h2 id="question"></h2>
   <div id="options"></div>
 </div>
 
-<!-- 🎆 过渡 -->
+<!-- 🎬 过渡 -->
 <div id="transition" class="page hidden">
   <div id="transitionText"></div>
 </div>
 
-<!-- 🎂 最终页 -->
+<!-- 📱 Story模式最终页 -->
 <div id="birthday" class="hidden">
 
-  <div class="final-page">
+  <div class="story-wrapper">
 
-    <div class="hero-title">生日快乐 🎂</div>
-    <div id="typing" class="hero-sub"></div>
-    <div class="hero-sub">A special moment, just for you</div>
-
-    <div class="vw-block">
-      🎉 今天是属于你的特别一天<br>
-      愿你永远自由、快乐、闪闪发光
+    <div class="story">
+      <div class="title">生日快乐 🎂</div>
+      <div class="sub" id="typing"></div>
     </div>
 
-    <div class="vw-block">
-      🖼️ 回忆片段<br><br>
+    <div class="story">
+      <div class="title">祝福</div>
+      <div class="sub">愿你永远闪闪发光 ✨</div>
+    </div>
+
+    <div class="story">
+      <div class="title">回忆</div>
       <img src="https://via.placeholder.com/400">
     </div>
 
-    <div class="vw-block">
-      🎥 一段想对你说的话<br><br>
+    <div class="story">
+      <div class="title">视频</div>
       <video controls>
         <source src="your-video.mp4">
       </video>
-    </div>
-
-    <div class="scroll-hint">
-      探索更多 ⬇
     </div>
 
   </div>
@@ -165,27 +191,40 @@ img, video {
 
 <script>
 
-/* ===== 题目 ===== */
+/* =========================
+   🎬 开场动画控制
+========================= */
+setTimeout(()=>{
+  introText.innerText = "进入你的专属故事...";
+},2000);
+
+setTimeout(()=>{
+  document.getElementById("intro").style.display="none";
+  document.getElementById("quiz").classList.remove("hidden");
+},4000);
+
+/* =========================
+   🧠 题目
+========================= */
 const questions = [
   { q:"她最喜欢的颜色？", options:["红","蓝","粉","黑"], answer:2 },
   { q:"她喜欢吃什么？", options:["辣","甜","苦","酸"], answer:1 },
-  { q:"她生日是几月？", options:["1","5","8","12"], answer:1 },
-  { q:"她最喜欢的动物？", options:["猫","狗","兔","熊"], answer:0 },
-  { q:"她喜欢旅行吗？", options:["是","否"], answer:0 },
-  { q:"她喜欢音乐吗？", options:["是","否"], answer:0 },
-  { q:"她喜欢咖啡吗？", options:["是","否"], answer:0 },
-  { q:"她喜欢海边吗？", options:["是","否"], answer:0 },
-  { q:"她开心吗？", options:["是","否"], answer:0 },
-  { q:"她是特别的人吗？", options:["当然是","不是"], answer:0 }
+  { q:"她生日是几月？", answer:1, options:["1","5","8","12"] },
+  { q:"她最喜欢的动物？", answer:0, options:["猫","狗","兔","熊"] },
+  { q:"她喜欢旅行吗？", answer:0, options:["是","否"] },
+  { q:"她喜欢音乐吗？", answer:0, options:["是","否"] },
+  { q:"她喜欢咖啡吗？", answer:0, options:["是","否"] },
+  { q:"她开心吗？", answer:0, options:["是","否"] },
+  { q:"她是特别的人吗？", answer:0, options:["当然是","不是"] },
+  { q:"她会被感动吗？", answer:0, options:["会","不会"] }
 ];
 
 let current = 0;
 
-/* ===== 题目打字（慢） ===== */
 function loadQuestion(){
   const q = questions[current];
 
-  typeText(q.q, document.getElementById("question"), 140);
+  type(q.q, question, 140);
 
   options.innerHTML = "";
 
@@ -197,7 +236,7 @@ function loadQuestion(){
   });
 }
 
-function typeText(text, el, speed){
+function type(text, el, speed){
   el.innerHTML="";
   let i=0;
   let t=setInterval(()=>{
@@ -207,7 +246,6 @@ function typeText(text, el, speed){
   },speed);
 }
 
-/* ===== 答题 ===== */
 function check(btn,i){
   if(i===questions[current].answer){
     btn.classList.add("correct");
@@ -226,37 +264,28 @@ function check(btn,i){
   }
 }
 
-/* ===== 过渡 ===== */
+/* =========================
+   🎬 过渡
+========================= */
 function showTransition(){
   quiz.classList.add("hidden");
   transition.classList.remove("hidden");
-  music.play();
 
-  typeCenter("生日快乐 🎂",()=>{
+  type("生日快乐 🎂", transitionText, 120);
+
+  setTimeout(()=>{
     transition.classList.add("hidden");
     birthday.classList.remove("hidden");
     startTyping();
-  });
+    revealStories();
+  },2000);
 }
 
-function typeCenter(text,cb){
-  let el=document.getElementById("transitionText");
-  el.innerHTML="";
-  let i=0;
-
-  let t=setInterval(()=>{
-    el.innerHTML+=text[i];
-    i++;
-    if(i>=text.length){
-      clearInterval(t);
-      setTimeout(cb,800);
-    }
-  },120);
-}
-
-/* ===== 最终打字 ===== */
+/* =========================
+   ✍️ 打字
+========================= */
 function startTyping(){
-  let text="愿你未来每天都比今天更快乐一点 ❤️";
+  let text="愿你未来每一天都比今天更快乐 ❤️";
   let el=document.getElementById("typing");
   let i=0;
 
@@ -267,7 +296,27 @@ function startTyping(){
   },90);
 }
 
-/* ===== 💖 单颗爱心 ===== */
+/* =========================
+   📱 Story滚动动画
+========================= */
+function revealStories(){
+  const items=document.querySelectorAll(".story");
+
+  function check(){
+    items.forEach(s=>{
+      if(s.getBoundingClientRect().top < window.innerHeight*0.8){
+        s.classList.add("show");
+      }
+    });
+  }
+
+  window.addEventListener("scroll",check);
+  check();
+}
+
+/* =========================
+   💖 单爱心
+========================= */
 document.addEventListener("click",e=>{
   let h=document.createElement("div");
   h.className="heart";
@@ -278,7 +327,9 @@ document.addEventListener("click",e=>{
   setTimeout(()=>h.remove(),1000);
 });
 
-/* ===== 初始化 ===== */
+/* =========================
+   初始化
+========================= */
 loadQuestion();
 
 </script>
