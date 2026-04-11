@@ -10,7 +10,7 @@ body {
   margin: 0;
   font-family: Arial;
   overflow-x: hidden;
-  background: linear-gradient(to bottom, #ffd6e0, #fff);
+  background: url("your-bg.jpg") no-repeat center center/cover;
 }
 
 .page {
@@ -30,27 +30,28 @@ button {
   border: none;
   background: #ff66a3;
   color: white;
-  border-radius: 8px;
+  border-radius: 20px;
   width: 80%;
 }
 
 /* 🎆 过渡 */
 #transition {
-  background: black;
+  background: rgba(0,0,0,0.8);
   color: white;
-  font-size: 30px;
+  font-size: 28px;
 }
 
-/* ✨ section */
+/* ✨ 内容卡片 */
 .section {
   margin: 50px auto;
   width: 90%;
   max-width: 400px;
-  background: white;
-  border-radius: 12px;
+  background: rgba(255,255,255,0.9);
+  border-radius: 20px;
   opacity: 0;
   transform: translateY(50px);
   transition: 0.6s;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
 }
 
 .section.show {
@@ -60,28 +61,27 @@ button {
 
 .header {
   background: #ff99cc;
-  padding: 10px;
+  padding: 12px;
+  border-radius: 20px 20px 0 0;
 }
 
-.content { padding: 10px; }
+.content { padding: 15px; }
 
 img, video {
   width: 100%;
-  border-radius: 10px;
+  border-radius: 20px;
 }
 
-/* 💖 爱心 */
-.heart {
-  position: fixed;
-  color: red;
-  animation: float 1s linear forwards;
+/* ⬇️ 引导 */
+#scrollHint {
+  margin-top: 20px;
+  font-size: 16px;
+  animation: bounce 1.5s infinite;
 }
 
-@keyframes float {
-  to {
-    transform: translateY(-50px);
-    opacity: 0;
-  }
+@keyframes bounce {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(10px); }
 }
 
 /* 🎁 彩蛋 */
@@ -91,45 +91,48 @@ img, video {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.8);
+  background: rgba(0,0,0,0.85);
   color: white;
   display: none;
   justify-content: center;
   align-items: center;
-  font-size: 24px;
+  text-align: center;
   flex-direction: column;
+  padding: 20px;
 }
 </style>
 </head>
 
 <body>
 
+<!-- 🎵 音乐 -->
 <audio id="music" loop>
   <source src="your-music.mp3">
 </audio>
 
-<!-- 答题 -->
+<!-- 🧠 答题 -->
 <div id="quiz" class="page">
   <h2 id="question"></h2>
   <div id="options"></div>
 </div>
 
-<!-- 过渡 -->
+<!-- 🎆 过渡 -->
 <div id="transition" class="page hidden">
-  🎂 生日快乐 🎉
+  <div id="transitionText"></div>
 </div>
 
-<!-- 主页面 -->
+<!-- 🎂 主页面 -->
 <div id="birthday" class="hidden">
 
   <div class="page">
     <h1>🎂 生日快乐 🎉</h1>
     <p id="typing"></p>
+    <div id="scrollHint">探索更多 ⬇️</div>
   </div>
 
   <div class="section">
     <div class="header">🎉 祝福</div>
-    <div class="content">愿你永远被爱包围 ❤️</div>
+    <div class="content">愿你永远开心快乐，被爱包围 ❤️</div>
   </div>
 
   <div class="section">
@@ -153,26 +156,27 @@ img, video {
 <!-- 🎁 彩蛋 -->
 <div id="surprise">
   🎁 其实我最想说的是…<br><br>
-  ❤️ 我真的很在乎你 ❤️
+  ❤️ 我真的很在乎你 ❤️<br><br>
+  <button onclick="closeSurprise()">关闭</button>
 </div>
 
 <script>
 const questions = [
-  { q: "她最喜欢的颜色？", options: ["红","蓝","粉","黑"], answer: 2 },
-  { q: "她喜欢吃什么？", options: ["辣","甜","苦","酸"], answer: 1 },
-  { q: "她生日是几月？", options: ["1","5","8","12"], answer: 1 },
-  { q: "她最喜欢的动物？", options: ["猫","狗","兔","熊"], answer: 0 },
-  { q: "她喜欢旅行吗？", options: ["是","否"], answer: 0 },
-  { q: "她喜欢音乐吗？", options: ["是","否"], answer: 0 },
-  { q: "她喜欢咖啡吗？", options: ["是","否"], answer: 0 },
-  { q: "她喜欢海边吗？", options: ["是","否"], answer: 0 },
-  { q: "她开心吗？", options: ["是","否"], answer: 0 },
-  { q: "她是特别的人吗？", options: ["当然是","不是"], answer: 0 }
+  { q:"她最喜欢的颜色？", options:["红","蓝","粉","黑"], answer:2 },
+  { q:"她喜欢吃什么？", options:["辣","甜","苦","酸"], answer:1 },
+  { q:"她生日是几月？", options:["1","5","8","12"], answer:1 },
+  { q:"她最喜欢的动物？", options:["猫","狗","兔","熊"], answer:0 },
+  { q:"她喜欢旅行吗？", options:["是","否"], answer:0 },
+  { q:"她喜欢音乐吗？", options:["是","否"], answer:0 },
+  { q:"她喜欢咖啡吗？", options:["是","否"], answer:0 },
+  { q:"她喜欢海边吗？", options:["是","否"], answer:0 },
+  { q:"她开心吗？", options:["是","否"], answer:0 },
+  { q:"她是特别的人吗？", options:["当然是","不是"], answer:0 }
 ];
 
 let current = 0;
 
-function loadQuestion() {
+function loadQuestion(){
   const q = questions[current];
   question.innerText = q.q;
   options.innerHTML = "";
@@ -198,22 +202,37 @@ function checkAnswer(i){
   }
 }
 
+/* 🎆 打字过渡 */
 function showTransition(){
   quiz.classList.add("hidden");
   transition.classList.remove("hidden");
   music.play();
 
-  setTimeout(()=>{
+  typeText("🎂 生日快乐 🎉", () => {
     transition.classList.add("hidden");
     birthday.classList.remove("hidden");
     startTyping();
     reveal();
     startSurpriseTimer();
-  },3000);
+  });
 }
 
-/* ✍️ 打字 */
-let text="今天是你的特别一天 ❤️";
+function typeText(text, callback){
+  let el=document.getElementById("transitionText");
+  let i=0;
+  el.innerHTML="";
+  let t=setInterval(()=>{
+    el.innerHTML+=text[i];
+    i++;
+    if(i>=text.length){
+      clearInterval(t);
+      setTimeout(callback,1000);
+    }
+  },100);
+}
+
+/* ✍️ 祝福打字 */
+let text="今天是属于你的特别一天，希望你永远开心快乐 ❤️";
 let i=0;
 function startTyping(){
   let t=setInterval(()=>{
@@ -223,7 +242,7 @@ function startTyping(){
   },80);
 }
 
-/* 📜 滚动 */
+/* 📜 滚动动画 */
 function reveal(){
   let secs=document.querySelectorAll(".section");
   function show(){
@@ -241,33 +260,37 @@ function reveal(){
 /* 🎆 烟花 */
 document.addEventListener("click",e=>{
   for(let i=0;i<20;i++){
-    let spark=document.createElement("div");
-    spark.style.position="fixed";
-    spark.style.left=e.clientX+"px";
-    spark.style.top=e.clientY+"px";
-    spark.style.width="5px";
-    spark.style.height="5px";
-    spark.style.background=`hsl(${Math.random()*360},100%,50%)`;
-    spark.style.borderRadius="50%";
-    document.body.appendChild(spark);
+    let d=document.createElement("div");
+    d.style.position="fixed";
+    d.style.left=e.clientX+"px";
+    d.style.top=e.clientY+"px";
+    d.style.width="5px";
+    d.style.height="5px";
+    d.style.background=`hsl(${Math.random()*360},100%,50%)`;
+    d.style.borderRadius="50%";
+    document.body.appendChild(d);
 
     let angle=Math.random()*2*Math.PI;
     let dist=100;
 
-    spark.animate([
+    d.animate([
       {transform:"translate(0,0)"},
       {transform:`translate(${Math.cos(angle)*dist}px,${Math.sin(angle)*dist}px)`}
     ],{duration:800});
 
-    setTimeout(()=>spark.remove(),800);
+    setTimeout(()=>d.remove(),800);
   }
 });
 
 /* 🎁 彩蛋 */
 function startSurpriseTimer(){
   setTimeout(()=>{
-    document.getElementById("surprise").style.display="flex";
+    surprise.style.display="flex";
   },8000);
+}
+
+function closeSurprise(){
+  surprise.style.display="none";
 }
 
 loadQuestion();
