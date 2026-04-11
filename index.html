@@ -11,9 +11,10 @@ body {
   font-family: Arial;
   overflow-x: hidden;
   background: url("your-bg.jpg") no-repeat center center/cover;
+  color: white;
 }
 
-/* 页面 */
+/* 页面基础 */
 .page {
   min-height: 100vh;
   display: flex;
@@ -30,67 +31,73 @@ button {
   padding: 12px;
   margin: 8px;
   border: none;
-  background: #ff66a3;
+  background: #ff4fa3;
   color: white;
-  border-radius: 20px;
+  border-radius: 18px;
   width: 80%;
-  max-width: 300px;
-  transition: 0.2s;
+  max-width: 320px;
 }
 
-/* 正确/错误 */
-.correct {
-  background: #4cd964 !important;
-}
+/* 正确错误 */
+.correct { background: #2ecc71 !important; }
+.wrong { background: #e74c3c !important; }
 
-.wrong {
-  background: #ff3b30 !important;
-}
-
-/* 过渡页 */
+/* 🎆 过渡页（打字） */
 #transition {
-  background: rgba(0,0,0,0.85);
+  background: black;
   color: white;
-  font-size: 28px;
+  font-size: 30px;
 }
 
-/* 卡片 */
-.section {
-  margin: 50px auto;
-  width: 90%;
-  max-width: 400px;
-  background: rgba(255,255,255,0.92);
-  border-radius: 20px;
-  opacity: 0;
-  transform: translateY(50px);
-  transition: 0.6s;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+/* =========================
+   🌟 最终页面 VW 风格设计
+========================= */
+
+.final-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 40px;
+  background: rgba(0,0,0,0.55);
 }
 
-.section.show {
-  opacity: 1;
-  transform: translateY(0);
+/* 大标题 */
+.hero-title {
+  font-size: 40px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
 }
 
-.header {
-  background: #ff99cc;
-  padding: 12px;
-  border-radius: 20px 20px 0 0;
+/* 副标题 */
+.hero-sub {
+  font-size: 16px;
+  opacity: 0.8;
+  margin-bottom: 40px;
 }
 
-.content {
-  padding: 15px;
+/* 分区（类似 VW 卡片） */
+.vw-block {
+  border-left: 3px solid #ff4fa3;
+  padding: 15px 20px;
+  margin: 20px 0;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(8px);
+  border-radius: 10px;
 }
 
+/* 图片 */
 img, video {
   width: 100%;
-  border-radius: 20px;
+  border-radius: 12px;
 }
 
-/* 提示 */
-#scrollHint {
-  margin-top: 20px;
-  font-size: 16px;
+/* ⬇️ 探索 */
+.scroll-hint {
+  margin-top: 40px;
+  font-size: 14px;
+  opacity: 0.7;
   animation: bounce 1.5s infinite;
 }
 
@@ -99,34 +106,17 @@ img, video {
   50% { transform: translateY(10px); }
 }
 
-/* 💖 爱心 */
-.floating-heart {
+/* 💖 单颗爱心 */
+.heart {
   position: fixed;
-  font-size: 20px;
+  font-size: 22px;
   pointer-events: none;
-  animation: floatUp 1s linear forwards;
+  animation: float 1s ease-out forwards;
 }
 
-@keyframes floatUp {
-  0% { transform: translateY(0); opacity: 1; }
-  100% { transform: translateY(-120px); opacity: 0; }
-}
-
-/* 🎁 彩蛋 */
-#surprise {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.85);
-  color: white;
-  display: none;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  text-align: center;
-  padding: 20px;
+@keyframes float {
+  0% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: translateY(-80px) scale(1.5); }
 }
 </style>
 </head>
@@ -149,46 +139,43 @@ img, video {
   <div id="transitionText"></div>
 </div>
 
-<!-- 🎂 主页面 -->
+<!-- 🎂 最终页面（VW风格） -->
 <div id="birthday" class="hidden">
 
-  <div class="page">
-    <h1>🎂 生日快乐 🎉</h1>
-    <p id="typing"></p>
-    <div id="scrollHint">探索更多 ⬇️</div>
-  </div>
+  <div class="final-page">
 
-  <div class="section">
-    <div class="header">🎉 祝福</div>
-    <div class="content">愿你永远开心快乐，被爱包围 ❤️</div>
-  </div>
+    <div class="hero-title">生日快乐 🎂</div>
+    <div id="typing"></div>
+    <div class="hero-sub">A special moment, just for you</div>
 
-  <div class="section">
-    <div class="header">🖼️ 图片</div>
-    <div class="content">
-      <img src="https://via.placeholder.com/300">
+    <div class="vw-block">
+      🎉 今天是属于你的特别一天<br>
+      愿你永远自由、快乐、闪闪发光
     </div>
-  </div>
 
-  <div class="section">
-    <div class="header">🎥 视频</div>
-    <div class="content">
+    <div class="vw-block">
+      🖼️ 回忆片段
+      <img src="https://via.placeholder.com/400">
+    </div>
+
+    <div class="vw-block">
+      🎥 一段话想给你
       <video controls>
         <source src="your-video.mp4">
       </video>
     </div>
+
+    <div class="scroll-hint">
+      探索更多 ⬇
+    </div>
+
   </div>
 
 </div>
 
-<!-- 🎁 彩蛋 -->
-<div id="surprise">
-  🎁 其实我最想说的是…<br><br>
-  ❤️ 我真的很在乎你 ❤️<br><br>
-  <button onclick="closeSurprise()">关闭</button>
-</div>
-
 <script>
+
+/* ===== 题目 ===== */
 const questions = [
   { q:"她最喜欢的颜色？", options:["红","蓝","粉","黑"], answer:2 },
   { q:"她喜欢吃什么？", options:["辣","甜","苦","酸"], answer:1 },
@@ -204,37 +191,38 @@ const questions = [
 
 let current = 0;
 
-/* 🧠 题目加载（打字） */
+/* ===== 打字题目（更慢） ===== */
 function loadQuestion(){
   const q = questions[current];
 
-  typeQuestion(q.q);
+  typeText(q.q, question);
 
   options.innerHTML = "";
 
   q.options.forEach((opt,i)=>{
     let btn=document.createElement("button");
     btn.innerText=opt;
-    btn.onclick=()=>checkAnswer(btn,i);
+
+    btn.onclick=()=>check(btn,i);
+
     options.appendChild(btn);
   });
 }
 
-function typeQuestion(text){
-  question.innerHTML="";
+/* 慢一点 */
+function typeText(text, el){
+  el.innerHTML="";
   let i=0;
   let t=setInterval(()=>{
-    question.innerHTML+=text[i];
+    el.innerHTML+=text[i];
     i++;
     if(i>=text.length) clearInterval(t);
-  },70);
+  },120); // 👈 放慢
 }
 
-/* ✅ 答题逻辑 */
-function checkAnswer(btn,i){
-  const correct = questions[current].answer;
-
-  if(i===correct){
+/* ===== 答题 ===== */
+function check(btn,i){
+  if(i===questions[current].answer){
     btn.classList.add("correct");
 
     setTimeout(()=>{
@@ -244,105 +232,71 @@ function checkAnswer(btn,i){
       }else{
         showTransition();
       }
-    },400);
+    },500);
+
   }else{
     btn.classList.add("wrong");
     setTimeout(()=>btn.classList.remove("wrong"),400);
   }
 }
 
-/* 🎆 过渡打字 */
+/* ===== 过渡 ===== */
 function showTransition(){
   quiz.classList.add("hidden");
   transition.classList.remove("hidden");
   music.play();
 
-  typeText("🎂 生日快乐 🎉",()=>{
+  typeCenter("生日快乐 🎂",()=>{
     transition.classList.add("hidden");
     birthday.classList.remove("hidden");
-    startTyping();
-    reveal();
-    startSurpriseTimer();
+    startFinalTyping();
   });
 }
 
-function typeText(text,callback){
+/* 中间打字 */
+function typeCenter(text, cb){
   let el=document.getElementById("transitionText");
-  let i=0;
   el.innerHTML="";
+  let i=0;
+
   let t=setInterval(()=>{
     el.innerHTML+=text[i];
     i++;
     if(i>=text.length){
       clearInterval(t);
-      setTimeout(callback,800);
+      setTimeout(cb,800);
     }
+  },120);
+}
+
+/* ===== 最终打字 ===== */
+function startFinalTyping(){
+  let text="愿你在未来的每一天，都比今天更快乐一点 ❤️";
+  let el=document.getElementById("typing");
+  let i=0;
+
+  let t=setInterval(()=>{
+    el.innerHTML+=text[i];
+    i++;
+    if(i>=text.length) clearInterval(t);
   },90);
 }
 
-/* ✍️ 主打字 */
-let text="今天是属于你的特别一天，希望你永远开心快乐 ❤️";
-let i=0;
-
-function startTyping(){
-  let t=setInterval(()=>{
-    typing.innerHTML+=text[i];
-    i++;
-    if(i>=text.length) clearInterval(t);
-  },80);
-}
-
-/* 📜 滚动显示 */
-function reveal(){
-  let secs=document.querySelectorAll(".section");
-  function show(){
-    let h=window.innerHeight*0.85;
-    secs.forEach(s=>{
-      if(s.getBoundingClientRect().top<h){
-        s.classList.add("show");
-      }
-    });
-  }
-  window.addEventListener("scroll",show);
-  show();
-}
-
-/* 💖 爱心点击效果 */
+/* ===== 💖 单个爱心 ===== */
 document.addEventListener("click",e=>{
-  for(let i=0;i<12;i++){
-    let heart=document.createElement("div");
-    heart.className="floating-heart";
-    heart.innerHTML="💖";
+  let h=document.createElement("div");
+  h.className="heart";
+  h.innerHTML="💖";
+  h.style.left=e.clientX+"px";
+  h.style.top=e.clientY+"px";
 
-    heart.style.left=e.clientX+"px";
-    heart.style.top=e.clientY+"px";
+  document.body.appendChild(h);
 
-    document.body.appendChild(heart);
-
-    let angle=Math.random()*2*Math.PI;
-    let dist=80;
-
-    heart.animate([
-      {transform:"translate(0,0)"},
-      {transform:`translate(${Math.cos(angle)*dist}px,${Math.sin(angle)*dist}px)`}
-    ],{duration:800});
-
-    setTimeout(()=>heart.remove(),800);
-  }
+  setTimeout(()=>h.remove(),1000);
 });
 
-/* 🎁 彩蛋 */
-function startSurpriseTimer(){
-  setTimeout(()=>{
-    surprise.style.display="flex";
-  },8000);
-}
-
-function closeSurprise(){
-  surprise.style.display="none";
-}
-
 loadQuestion();
+
 </script>
 
 </body>
