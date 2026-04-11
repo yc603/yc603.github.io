@@ -3,45 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>生日电影 🎬</title>
+<title>生日惊喜 🎂</title>
 
 <style>
 body {
   margin: 0;
   font-family: Arial;
-  background: black;
-  color: white;
   overflow-x: hidden;
+  background: url("mmexport1737116990793.jpg") no-repeat center center/cover;
+  color: white;
 }
 
-/* =========================
-   🎬 电影开场
-========================= */
-#intro {
-  position: fixed;
-  inset: 0;
-  background: black;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  z-index: 999;
-}
-
-.intro-text {
-  font-size: 20px;
-  opacity: 0;
-  animation: fadeIn 2.5s forwards;
-  letter-spacing: 2px;
-}
-
-@keyframes fadeIn {
-  to { opacity: 1; }
-}
-
-/* =========================
-   🧠 题目（保留你的）
-========================= */
+/* ======================
+   🧠 题目页面
+====================== */
 .page {
   min-height: 100vh;
   display: flex;
@@ -49,68 +24,46 @@ body {
   align-items: center;
   flex-direction: column;
   text-align: center;
-  background: url("mmexport1737116990793.jpg") center/cover;
 }
 
 .hidden { display: none; }
 
 #question {
-  text-shadow: 0 6px 20px rgba(0,0,0,0.8);
-  font-size: 22px;
+  text-shadow: 0 4px 12px rgba(0,0,0,0.7);
 }
 
 button {
   padding: 12px;
   margin: 8px;
   border: none;
-  background: rgba(255,79,165,0.9);
+  background: #ff4fa3;
   color: white;
-  border-radius: 20px;
+  border-radius: 18px;
   width: 80%;
   max-width: 320px;
-  transition: 0.2s;
-}
-
-button:active {
-  transform: scale(0.96);
 }
 
 .correct { background: #2ecc71 !important; }
 .wrong { background: #e74c3c !important; }
 
-/* =========================
-   🎬 转场（电影感）
-========================= */
+/* ======================
+   🎬 过渡页
+====================== */
 #transition {
-  position: fixed;
-  inset: 0;
   background: black;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 34px;
-  letter-spacing: 3px;
-  animation: zoom 1.8s ease;
+  font-size: 28px;
 }
 
-@keyframes zoom {
-  from { transform: scale(1.3); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
-
-/* =========================
-   📱 最后页（保留+增强）
-========================= */
+/* ======================
+   📱 最后页（折叠滚动）
+====================== */
 .story-wrapper {
-  height: 100vh;
-  overflow-y: auto;
-  scroll-snap-type: y mandatory;
-  background: linear-gradient(to bottom, #000, #111);
+  min-height: 100vh;
+  background: rgba(0,0,0,0.55);
 }
 
 .story {
   height: 100vh;
-  scroll-snap-align: start;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -119,19 +72,20 @@ button:active {
   text-align: center;
 
   opacity: 0;
-  transform: scale(1.05);
-  filter: blur(10px);
-  transition: 1s ease;
+  transform: translateY(80px) scale(0.95);
+  transition: 0.8s ease;
+
+  border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 
+/* 展开状态 */
 .story.show {
   opacity: 1;
-  transform: scale(1);
-  filter: blur(0);
+  transform: translateY(0) scale(1);
 }
 
 .title {
-  font-size: 42px;
+  font-size: 40px;
   font-weight: bold;
 }
 
@@ -142,45 +96,41 @@ button:active {
 
 img, video {
   width: 85%;
-  max-width: 420px;
+  max-width: 400px;
   border-radius: 15px;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.6);
 }
 
-/* =========================
-   💖 爱心
-========================= */
+/* ======================
+   💖 单爱心
+====================== */
 .heart {
   position: fixed;
-  font-size: 20px;
+  font-size: 22px;
   pointer-events: none;
-  animation: float 1.2s ease-out forwards;
+  animation: float 1s ease-out forwards;
 }
 
 @keyframes float {
   0% { opacity: 1; transform: scale(1); }
-  100% { opacity: 0; transform: translateY(-120px) scale(1.6); }
+  100% { opacity: 0; transform: translateY(-80px) scale(1.5); }
 }
 </style>
 </head>
 
 <body>
 
-<!-- 🎬 开场 -->
-<div id="intro">
-  <div class="intro-text" id="introText">A story is about to begin...</div>
-</div>
-
-<!-- 🧠 题目（完全保留你的） -->
-<div id="quiz" class="page hidden">
+<!-- 🎬 开场后直接进入题目 -->
+<div id="quiz" class="page">
   <h2 id="question"></h2>
   <div id="options"></div>
 </div>
 
-<!-- 🎬 转场 -->
-<div id="transition" class="hidden">生日快乐 🎬</div>
+<!-- 🎬 过渡 -->
+<div id="transition" class="page hidden">
+  <div id="transitionText"></div>
+</div>
 
-<!-- 🎂 最终页（保留你的结构） -->
+<!-- 🎂 最终页 -->
 <div id="birthday" class="hidden">
 
   <div class="story-wrapper">
@@ -213,39 +163,28 @@ img, video {
 
 <script>
 
-/* =========================
-   🎬 开场控制
-========================= */
-setTimeout(()=>{
-  introText.innerText = "Entering your story...";
-},2000);
-
-setTimeout(()=>{
-  intro.style.display="none";
-  quiz.classList.remove("hidden");
-},4000);
-
-/* =========================
-   🧠 题目（你的完整保留）
-========================= */
+/* ======================
+   🧠 题目
+====================== */
 const questions = [
   { q:"我们是怎么认识的？", options:["上班🐄","实习🐎","搭讪😏","打乒乓球🏓","上课📖"], answer:2 },
   { q:"我们认识的日期？", options:["5月12号","6月3号","4月17号","7月14号","不记得🤯"], answer:4 },
   { q:"我的mbti？", options:["enfj","intp","infj","enfp","entp"], answer:3 },
-  { q:"我们最常吃？", options:["螺狮粉","臭豆腐","面","烧仙草","清汤粉"], answer:0 },
-  { q:"最常去的地方？", options:["厦门","福州","龙岩","泉州","赣州"], answer:2 },
-  { q:"身高？", options:["163.1","163.2","163.3","163.4","163.5"], answer:3 },
-  { q:"你放工想干嘛？", options:["睡觉","刷剧","打游戏","啥也不干","找我"], answer:4 },
-  { q:"臭豆腐几种？", options:["10","13","15","9","7"], answer:2 },
-  { q:"我们最常做的事？", options:["聊天","游戏","发呆","吃东西","睡觉"], answer:1 },
-  { q:"你觉得我是什么？", options:["普通","特别","路人","陌生人","朋友"], answer:1 }
+  { q:"我们在中国最常吃的食物是？", options:["螺狮粉","臭豆腐","姥姥下碗面","烧仙草","清汤粉"], answer:0 },
+  { q:"回来马来西亚后我们吃的第一家餐厅是？", options:["太二酸菜鱼","中国兰州拉面","Uno Sushi","Mr Wu","Shin Zushi"], answer:2 },
+  { q:"你陪我打游戏玩到凌晨的地方是？", options:["福州","龙岩","厦门","赣州","泉州"], answer:1 },
+  { q:"我们一起去过哪里旅行？", options:["泉州","厦门","漳州","福州","赣州"], answer:4 },
+  { q:"我的身高？", options:["163。1","163.2","163.3","163.4","163.5"], answer:3 },
+  { q:"你放工后最想干嘛？", options:["直奔老巢","狠狠睡觉","刷剧","啥也不干","跟我一起玩"], answer:4 },
+  { q:"臭豆腐有几种口味？", options:["10","13","15","9","7"], answer:2 }
 ];
 
 let current = 0;
 
 function loadQuestion(){
   const q = questions[current];
-  type(q.q, question, 150);
+
+  type(q.q, question, 140);
 
   options.innerHTML = "";
 
@@ -285,24 +224,26 @@ function check(btn,i){
   }
 }
 
-/* =========================
-   🎬 转场
-========================= */
+/* ======================
+   🎬 过渡
+====================== */
 function showTransition(){
   quiz.classList.add("hidden");
   transition.classList.remove("hidden");
+
+  type("生日快乐 🎂", transitionText, 120);
 
   setTimeout(()=>{
     transition.classList.add("hidden");
     birthday.classList.remove("hidden");
     startTyping();
-    reveal();
-  },1800);
+    revealStories();
+  },2000);
 }
 
-/* =========================
+/* ======================
    ✍️ 打字
-========================= */
+====================== */
 function startTyping(){
   let text="愿你未来每一天都比今天更快乐 ❤️";
   let el=document.getElementById("typing");
@@ -315,10 +256,10 @@ function startTyping(){
   },90);
 }
 
-/* =========================
-   📱 滚动电影感
-========================= */
-function reveal(){
+/* ======================
+   📱 滚动折叠展开
+====================== */
+function revealStories(){
   const items=document.querySelectorAll(".story");
 
   function check(){
@@ -333,9 +274,9 @@ function reveal(){
   check();
 }
 
-/* =========================
-   💖 爱心
-========================= */
+/* ======================
+   💖 单颗爱心
+====================== */
 document.addEventListener("click",e=>{
   let h=document.createElement("div");
   h.className="heart";
@@ -343,10 +284,12 @@ document.addEventListener("click",e=>{
   h.style.left=e.clientX+"px";
   h.style.top=e.clientY+"px";
   document.body.appendChild(h);
-  setTimeout(()=>h.remove(),1200);
+  setTimeout(()=>h.remove(),1000);
 });
 
-/* init */
+/* ======================
+   初始化
+====================== */
 loadQuestion();
 
 </script>
