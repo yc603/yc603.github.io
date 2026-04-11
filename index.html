@@ -3,20 +3,45 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>生日惊喜 🎂</title>
+<title>生日电影 🎬</title>
 
 <style>
 body {
   margin: 0;
   font-family: Arial;
-  overflow-x: hidden;
-  background: url("mmexport1737116990793.jpg") no-repeat center center/cover;
+  background: black;
   color: white;
+  overflow-x: hidden;
 }
 
-/* ======================
-   🧠 题目页面
-====================== */
+/* =========================
+   🎬 电影开场
+========================= */
+#intro {
+  position: fixed;
+  inset: 0;
+  background: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 999;
+}
+
+.intro-text {
+  font-size: 20px;
+  opacity: 0;
+  animation: fadeIn 3s forwards;
+  letter-spacing: 2px;
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+/* =========================
+   🧠 题目（电影对白）
+========================= */
 .page {
   min-height: 100vh;
   display: flex;
@@ -24,46 +49,68 @@ body {
   align-items: center;
   flex-direction: column;
   text-align: center;
+  background: url("mmexport1737116990793.jpg") center/cover;
 }
 
 .hidden { display: none; }
 
 #question {
-  text-shadow: 0 4px 12px rgba(0,0,0,0.7);
+  font-size: 22px;
+  text-shadow: 0 4px 20px rgba(0,0,0,0.8);
 }
 
 button {
   padding: 12px;
   margin: 8px;
   border: none;
-  background: #ff4fa3;
+  background: rgba(255,79,165,0.9);
   color: white;
-  border-radius: 18px;
+  border-radius: 20px;
   width: 80%;
   max-width: 320px;
+  transition: 0.3s;
+}
+
+button:active {
+  transform: scale(0.96);
 }
 
 .correct { background: #2ecc71 !important; }
 .wrong { background: #e74c3c !important; }
 
-/* ======================
-   🎬 过渡页
-====================== */
+/* =========================
+   🎬 电影转场
+========================= */
 #transition {
+  position: fixed;
+  inset: 0;
   background: black;
-  font-size: 28px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 34px;
+  letter-spacing: 3px;
+  animation: zoomIn 2s ease;
 }
 
-/* ======================
-   📱 最后页（折叠滚动）
-====================== */
+@keyframes zoomIn {
+  from { transform: scale(1.3); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* =========================
+   📱 电影式滚动故事
+========================= */
 .story-wrapper {
-  min-height: 100vh;
-  background: rgba(0,0,0,0.55);
+  height: 100vh;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  background: linear-gradient(to bottom, #000, #111);
 }
 
 .story {
   height: 100vh;
+  scroll-snap-align: start;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -72,21 +119,21 @@ button {
   text-align: center;
 
   opacity: 0;
-  transform: translateY(80px) scale(0.95);
-  transition: 0.8s ease;
-
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+  transform: scale(1.05);
+  filter: blur(10px);
+  transition: 1s ease;
 }
 
-/* 展开状态 */
 .story.show {
   opacity: 1;
-  transform: translateY(0) scale(1);
+  transform: scale(1);
+  filter: blur(0);
 }
 
 .title {
-  font-size: 40px;
+  font-size: 42px;
   font-weight: bold;
+  letter-spacing: 2px;
 }
 
 .sub {
@@ -96,41 +143,49 @@ button {
 
 img, video {
   width: 85%;
-  max-width: 400px;
+  max-width: 420px;
   border-radius: 15px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.6);
 }
 
-/* ======================
-   💖 单爱心
-====================== */
+/* =========================
+   💖 爱心（电影粒子）
+========================= */
 .heart {
   position: fixed;
-  font-size: 22px;
+  font-size: 20px;
   pointer-events: none;
-  animation: float 1s ease-out forwards;
+  animation: float 1.2s ease-out forwards;
 }
 
 @keyframes float {
   0% { opacity: 1; transform: scale(1); }
-  100% { opacity: 0; transform: translateY(-80px) scale(1.5); }
+  100% { opacity: 0; transform: translateY(-120px) scale(1.6); }
 }
 </style>
 </head>
 
 <body>
 
-<!-- 🎬 开场后直接进入题目 -->
-<div id="quiz" class="page">
+<!-- 🎬 电影开场 -->
+<div id="intro">
+  <div class="intro-text" id="introText">
+    A story begins...
+  </div>
+</div>
+
+<!-- 🧠 题目 -->
+<div id="quiz" class="page hidden">
   <h2 id="question"></h2>
   <div id="options"></div>
 </div>
 
-<!-- 🎬 过渡 -->
-<div id="transition" class="page hidden">
-  <div id="transitionText"></div>
+<!-- 🎬 转场 -->
+<div id="transition" class="hidden">
+  生日快乐 🎬
 </div>
 
-<!-- 🎂 最终页 -->
+<!-- 🎂 电影结局 -->
 <div id="birthday" class="hidden">
 
   <div class="story-wrapper">
@@ -142,7 +197,7 @@ img, video {
 
     <div class="story">
       <div class="title">祝福</div>
-      <div class="sub">愿你永远闪闪发光 ✨</div>
+      <div class="sub">You are my favorite story ✨</div>
     </div>
 
     <div class="story">
@@ -151,7 +206,7 @@ img, video {
     </div>
 
     <div class="story">
-      <div class="title">视频</div>
+      <div class="title">结尾</div>
       <video controls>
         <source src="your-video.mp4">
       </video>
@@ -163,9 +218,21 @@ img, video {
 
 <script>
 
-/* ======================
+/* =========================
+   🎬 开场控制
+========================= */
+setTimeout(()=>{
+  document.getElementById("introText").innerText = "This is not just a website...";
+},2000);
+
+setTimeout(()=>{
+  document.getElementById("intro").style.display="none";
+  document.getElementById("quiz").classList.remove("hidden");
+},4000);
+
+/* =========================
    🧠 题目
-====================== */
+========================= */
 const questions = [
   { q:"我们是怎么认识的？", options:["上班🐄","实习🐎","搭讪😏","打乒乓球🏓","上课📖"], answer:2 },
   { q:"我们认识的日期？", options:["5月12号","6月3号","4月17号","7月14号","不记得🤯"], answer:4 },
@@ -184,7 +251,7 @@ let current = 0;
 function loadQuestion(){
   const q = questions[current];
 
-  type(q.q, question, 140);
+  type(q.q, question, 160);
 
   options.innerHTML = "";
 
@@ -217,35 +284,33 @@ function check(btn,i){
       }else{
         showTransition();
       }
-    },400);
+    },500);
   }else{
     btn.classList.add("wrong");
     setTimeout(()=>btn.classList.remove("wrong"),400);
   }
 }
 
-/* ======================
-   🎬 过渡
-====================== */
+/* =========================
+   🎬 转场
+========================= */
 function showTransition(){
   quiz.classList.add("hidden");
   transition.classList.remove("hidden");
-
-  type("生日快乐 🎂", transitionText, 120);
 
   setTimeout(()=>{
     transition.classList.add("hidden");
     birthday.classList.remove("hidden");
     startTyping();
-    revealStories();
+    reveal();
   },2000);
 }
 
-/* ======================
+/* =========================
    ✍️ 打字
-====================== */
+========================= */
 function startTyping(){
-  let text="愿你未来每一天都比今天更快乐 ❤️";
+  let text="Every moment with you matters.";
   let el=document.getElementById("typing");
   let i=0;
 
@@ -256,10 +321,10 @@ function startTyping(){
   },90);
 }
 
-/* ======================
-   📱 滚动折叠展开
-====================== */
-function revealStories(){
+/* =========================
+   📱 滚动电影感
+========================= */
+function reveal(){
   const items=document.querySelectorAll(".story");
 
   function check(){
@@ -274,9 +339,9 @@ function revealStories(){
   check();
 }
 
-/* ======================
-   💖 单颗爱心
-====================== */
+/* =========================
+   💖 粒子爱心
+========================= */
 document.addEventListener("click",e=>{
   let h=document.createElement("div");
   h.className="heart";
@@ -284,12 +349,10 @@ document.addEventListener("click",e=>{
   h.style.left=e.clientX+"px";
   h.style.top=e.clientY+"px";
   document.body.appendChild(h);
-  setTimeout(()=>h.remove(),1000);
+  setTimeout(()=>h.remove(),1200);
 });
 
-/* ======================
-   初始化
-====================== */
+/* init */
 loadQuestion();
 
 </script>
