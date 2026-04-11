@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>生日惊喜 🎂</title>
+<style>
+body {
+  font-family: Arial;
+  text-align: center;
+  background: #ffe6f0;
+}
+
+.container {
+  margin-top: 50px;
+}
+
+button {
+  padding: 10px 20px;
+  margin: 10px;
+  border: none;
+  background: pink;
+  cursor: pointer;
+}
+
+.hidden {
+  display: none;
+}
+
+.section {
+  margin: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}
+
+.header {
+  background: #ff99cc;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.content {
+  display: none;
+  padding: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- 问题区 -->
+  <div id="quiz">
+    <h2 id="question">问题加载中...</h2>
+    <div id="options"></div>
+  </div>
+
+  <!-- 祝福页面 -->
+  <div id="birthday" class="hidden">
+    <h1>🎂 生日快乐！🎉</h1>
+
+    <!-- 第一部分 -->
+    <div class="section">
+      <div class="header" onclick="toggle(this)">🎉 点击展开祝福</div>
+      <div class="content">
+        <p>祝你生日快乐！愿你天天开心，梦想成真 ❤️</p>
+      </div>
+    </div>
+
+    <!-- 第二部分 -->
+    <div class="section">
+      <div class="header" onclick="toggle(this)">🖼️ 点击查看图片</div>
+      <div class="content">
+        <img src="https://via.placeholder.com/300" />
+      </div>
+    </div>
+
+    <!-- 第三部分 -->
+    <div class="section">
+      <div class="header" onclick="toggle(this)">🎥 点击观看视频</div>
+      <div class="content">
+        <video width="300" controls>
+          <source src="your-video.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+const questions = [
+  { q: "她最喜欢的颜色？", options: ["红", "蓝", "粉", "黑"], answer: 2 },
+  { q: "她喜欢吃什么？", options: ["辣", "甜", "苦", "酸"], answer: 1 },
+  { q: "她生日是几月？", options: ["1", "5", "8", "12"], answer: 1 },
+  { q: "她最喜欢的动物？", options: ["猫", "狗", "兔", "熊"], answer: 0 },
+  { q: "她喜欢看电影吗？", options: ["是", "否"], answer: 0 },
+  { q: "她喜欢旅行吗？", options: ["是", "否"], answer: 0 },
+  { q: "她喜欢音乐吗？", options: ["是", "否"], answer: 0 },
+  { q: "她喜欢咖啡吗？", options: ["是", "否"], answer: 0 },
+  { q: "她喜欢海边吗？", options: ["是", "否"], answer: 0 },
+  { q: "她是特别的人吗？", options: ["当然是", "不是"], answer: 0 }
+];
+
+let current = 0;
+
+function loadQuestion() {
+  const q = questions[current];
+  document.getElementById("question").innerText = q.q;
+
+  const optionsDiv = document.getElementById("options");
+  optionsDiv.innerHTML = "";
+
+  q.options.forEach((opt, index) => {
+    const btn = document.createElement("button");
+    btn.innerText = opt;
+    btn.onclick = () => checkAnswer(index);
+    optionsDiv.appendChild(btn);
+  });
+}
+
+function checkAnswer(index) {
+  if (index === questions[current].answer) {
+    current++;
+    if (current < questions.length) {
+      loadQuestion();
+    } else {
+      document.getElementById("quiz").classList.add("hidden");
+      document.getElementById("birthday").classList.remove("hidden");
+    }
+  } else {
+    alert("答错啦，再试试 😜");
+  }
+}
+
+function toggle(element) {
+  const content = element.nextElementSibling;
+  content.style.display = content.style.display === "block" ? "none" : "block";
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>
