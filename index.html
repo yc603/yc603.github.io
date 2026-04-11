@@ -14,18 +14,19 @@ body {
   color: white;
 }
 
-/* ===== 通用页面 ===== */
+/* 页面 */
 .page {
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  text-align: center;
 }
 
 .hidden { display: none; }
 
-/* ===== 按钮 ===== */
+/* 按钮 */
 button {
   padding: 12px;
   margin: 8px;
@@ -37,60 +38,62 @@ button {
   max-width: 320px;
 }
 
-/* 正误 */
+/* 正确/错误 */
 .correct { background: #2ecc71 !important; }
 .wrong { background: #e74c3c !important; }
 
-/* ===== 过渡页 ===== */
+/* 过渡页 */
 #transition {
   background: black;
-  color: white;
   font-size: 28px;
 }
 
-/* ===== 最后一页（滚动结构） ===== */
-.final-wrapper {
-  height: 100vh;
-  overflow-y: auto;
-  scroll-snap-type: y mandatory;
-}
-
-/* 每一屏 */
-.section {
-  height: 100vh;
-  scroll-snap-align: start;
+/* ===== VW风格最终页 ===== */
+.final-page {
+  min-height: 100vh;
   display: flex;
-  justify-content: center;
-  align-items: center;
   flex-direction: column;
-
-  opacity: 0;
-  transform: translateY(40px);
-  transition: 0.8s;
-  background: rgba(0,0,0,0.55);
+  justify-content: center;
   padding: 40px;
-  text-align: center;
+  background: rgba(0,0,0,0.55);
 }
 
-.section.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.title {
+.hero-title {
   font-size: 40px;
   font-weight: bold;
+  letter-spacing: 2px;
 }
 
-.sub {
-  margin-top: 10px;
+.hero-sub {
+  font-size: 16px;
   opacity: 0.8;
+  margin-top: 10px;
+}
+
+.vw-block {
+  border-left: 3px solid #ff4fa3;
+  padding: 15px 20px;
+  margin: 20px 0;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(8px);
+  border-radius: 10px;
 }
 
 img, video {
-  width: 80%;
-  max-width: 400px;
-  border-radius: 15px;
+  width: 100%;
+  border-radius: 12px;
+}
+
+.scroll-hint {
+  margin-top: 30px;
+  font-size: 14px;
+  opacity: 0.7;
+  animation: bounce 1.5s infinite;
+}
+
+@keyframes bounce {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(10px); }
 }
 
 /* 💖 单爱心 */
@@ -129,28 +132,31 @@ img, video {
 <!-- 🎂 最终页 -->
 <div id="birthday" class="hidden">
 
-  <div class="final-wrapper">
+  <div class="final-page">
 
-    <div class="section">
-      <div class="title">生日快乐 🎂</div>
-      <div class="sub" id="typing"></div>
+    <div class="hero-title">生日快乐 🎂</div>
+    <div id="typing" class="hero-sub"></div>
+    <div class="hero-sub">A special moment, just for you</div>
+
+    <div class="vw-block">
+      🎉 今天是属于你的特别一天<br>
+      愿你永远自由、快乐、闪闪发光
     </div>
 
-    <div class="section">
-      <div class="title">祝福</div>
-      <div class="sub">愿你永远闪闪发光 ✨</div>
-    </div>
-
-    <div class="section">
-      <div class="title">回忆</div>
+    <div class="vw-block">
+      🖼️ 回忆片段<br><br>
       <img src="https://via.placeholder.com/400">
     </div>
 
-    <div class="section">
-      <div class="title">视频</div>
+    <div class="vw-block">
+      🎥 一段想对你说的话<br><br>
       <video controls>
         <source src="your-video.mp4">
       </video>
+    </div>
+
+    <div class="scroll-hint">
+      探索更多 ⬇
     </div>
 
   </div>
@@ -158,10 +164,6 @@ img, video {
 </div>
 
 <script>
-
-/* ===== 修复：DOM安全引用 ===== */
-const questionEl = document.getElementById("question");
-const optionsEl = document.getElementById("options");
 
 /* ===== 题目 ===== */
 const questions = [
@@ -183,15 +185,15 @@ let current = 0;
 function loadQuestion(){
   const q = questions[current];
 
-  typeText(q.q, questionEl, 120); // 👈 放慢
+  typeText(q.q, document.getElementById("question"), 140);
 
-  optionsEl.innerHTML = "";
+  options.innerHTML = "";
 
   q.options.forEach((opt,i)=>{
     let btn=document.createElement("button");
     btn.innerText=opt;
     btn.onclick=()=>check(btn,i);
-    optionsEl.appendChild(btn);
+    options.appendChild(btn);
   });
 }
 
@@ -230,20 +232,32 @@ function showTransition(){
   transition.classList.remove("hidden");
   music.play();
 
-  typeText("生日快乐 🎂", transitionText, 120);
-
-  setTimeout(()=>{
+  typeCenter("生日快乐 🎂",()=>{
     transition.classList.add("hidden");
     birthday.classList.remove("hidden");
     startTyping();
-    revealSections();
-  },2000);
+  });
+}
+
+function typeCenter(text,cb){
+  let el=document.getElementById("transitionText");
+  el.innerHTML="";
+  let i=0;
+
+  let t=setInterval(()=>{
+    el.innerHTML+=text[i];
+    i++;
+    if(i>=text.length){
+      clearInterval(t);
+      setTimeout(cb,800);
+    }
+  },120);
 }
 
 /* ===== 最终打字 ===== */
 function startTyping(){
-  const el = document.getElementById("typing");
-  let text = "愿你每天都比昨天更快乐一点 ❤️";
+  let text="愿你未来每天都比今天更快乐一点 ❤️";
+  let el=document.getElementById("typing");
   let i=0;
 
   let t=setInterval(()=>{
@@ -253,23 +267,7 @@ function startTyping(){
   },90);
 }
 
-/* ===== 滚动出现 ===== */
-function revealSections(){
-  const secs = document.querySelectorAll(".section");
-
-  function check(){
-    secs.forEach(s=>{
-      if(s.getBoundingClientRect().top < window.innerHeight*0.8){
-        s.classList.add("show");
-      }
-    });
-  }
-
-  window.addEventListener("scroll",check);
-  check();
-}
-
-/* ===== 💖 单爱心 ===== */
+/* ===== 💖 单颗爱心 ===== */
 document.addEventListener("click",e=>{
   let h=document.createElement("div");
   h.className="heart";
