@@ -1,1 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>生日惊喜 🎂</title>
 
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  overflow-x: hidden;
+  background: url("mmexport1737116990793.jpg") no-repeat center center/cover;
+  color: white;
+}
+
+/* ======================
+   🧠 题目页面
+====================== */
+.page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+}
+
+.hidden { display: none; }
+
+#question {
+  text-shadow: 0 4px 12px rgba(0,0,0,0.7);
+}
+
+button {
+  padding: 12px;
+  margin: 8px;
+  border: none;
+  background: #ff4fa3;
+  color: white;
+  border-radius: 18px;
+  width: 80%;
+  max-width: 320px;
+}
+
+.correct { background: #2ecc71 !important; }
+.wrong { background: #e74c3c !important; }
+
+/* ======================
+   🎬 过渡页
+====================== */
+#transition {
+  background: black;
+  font-size: 28px;
+}
+
+/* ======================
+   📱 最后页（折叠滚动）
+====================== */
+.story-wrapper {
+  min-height: 100vh;
+  background: rgba(0,0,0,0.55);
+}
+
+.story {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 40px;
+  text-align: center;
+
+  opacity: 0;
+  transform: translateY(80px) scale(0.95);
+  transition: 0.8s ease;
+
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+/* 展开状态 */
+.story.show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.title {
+  font-size: 40px;
+  font-weight: bold;
+}
+
+.sub {
+  margin-top: 10px;
+  opacity: 0.8;
+}
+
+img, video {
+  width: 85%;
+  max-width: 400px;
+  border-radius: 15px;
+}
+
+/* ======================
+   💖 单爱心
+====================== */
+.heart {
+  position: fixed;
+  font-size: 22px;
+  pointer-events: none;
+  animation: float 1s ease-out forwards;
+}
+
+@keyframes float {
+  0% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: translateY(-80px) scale(1.5); }
+}
+</style>
+</head>
+
+<body>
+
+<!-- 🎬 开场后直接进入题目 -->
+<div id="quiz" class="page">
+  <h2 id="question"></h2>
+  <div id="options"></div>
+</div>
+
+<!-- 🎬 过渡 -->
+<div id="transition" class="page hidden">
+  <div id="transitionText"></div>
+</div>
+
+<!-- 🎂 最终页 -->
+<div id="birthday" class="hidden">
+
+  <div class="story-wrapper">
+
+    <div class="story">
+      <div class="title">生日快乐 🎂</div>
+      <div class="sub" id="typing"></div>
+    </div>
+
+    <div class="story">
+      <div class="title">祝福</div>
+      <div class="sub">愿你永远闪闪发光 ✨</div>
+    </div>
+
+    <div class="story">
+      <div class="title">回忆</div>
+      <img src="https://via.placeholder.com/400">
+    </div>
+
+    <div class="story">
+      <div class="title">视频</div>
+      <video controls>
+        <source src="your-video.mp4">
+      </video>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+
+/* ======================
+   🧠 题目
+====================== */
+const questions = [
+  { q:"我们是怎么认识的？", options:["上班🐄","实习🐎","搭讪😏","打乒乓球🏓","上课📖"], answer:2 },
+  { q:"我们认识的日期？", options:["5月12号","6月3号","4月17号","7月14号","不记得🤯"], answer:4 },
+  { q:"我的mbti？", options:["enfj","intp","infj","enfp","entp"], answer:3 },
+  { q:"我们在中国最常吃的食物是？", options:["螺狮粉","臭豆腐","姥姥下碗面","烧仙草","清汤粉"], answer:0 },
+  { q:"回来马来西亚后我们吃的第一家餐厅是？", options:["太二酸菜鱼","中国兰州拉面","Uno Sushi","Mr Wu","Shin Zushi"], answer:2 },
+  { q:"你陪我打游戏玩到凌晨的地方是？", options:["福州","龙岩","厦门","赣州","泉州"], answer:1 },
+  { q:"我们一起去过哪里旅行？", options:["泉州","厦门","漳州","福州","赣州"], answer:4 },
+  { q:"我的身高？", options:["163。1","163.2","163.3","163.4","163.5"], answer:3 },
+  { q:"你放工后最想干嘛？", options:["直奔老巢","狠狠睡觉","刷剧","啥也不干","跟我一起玩"], answer:4 },
+  { q:"臭豆腐有几种口味？", options:["10","13","15","9","7"], answer:2 }
+];
+
+let current = 0;
+
+function loadQuestion(){
+  const q = questions[current];
+
+  type(q.q, question, 140);
+
+  options.innerHTML = "";
+
+  q.options.forEach((opt,i)=>{
+    let btn=document.createElement("button");
+    btn.innerText=opt;
+    btn.onclick=()=>check(btn,i);
+    options.appendChild(btn);
+  });
+}
+
+function type(text, el, speed){
+  el.innerHTML="";
+  let i=0;
+  let t=setInterval(()=>{
+    el.innerHTML+=text[i];
+    i++;
+    if(i>=text.length) clearInterval(t);
+  },speed);
+}
+
+function check(btn,i){
+  if(i===questions[current].answer){
+    btn.classList.add("correct");
+
+    setTimeout(()=>{
+      current++;
+      if(current<questions.length){
+        loadQuestion();
+      }else{
+        showTransition();
+      }
+    },400);
+  }else{
+    btn.classList.add("wrong");
+    setTimeout(()=>btn.classList.remove("wrong"),400);
+  }
+}
+
+/* ======================
+   🎬 过渡
+====================== */
+function showTransition(){
+  quiz.classList.add("hidden");
+  transition.classList.remove("hidden");
+
+  type("生日快乐 🎂", transitionText, 120);
+
+  setTimeout(()=>{
+    transition.classList.add("hidden");
+    birthday.classList.remove("hidden");
+    startTyping();
+    revealStories();
+  },2000);
+}
+
+/* ======================
+   ✍️ 打字
+====================== */
+function startTyping(){
+  let text="愿你未来每一天都比今天更快乐 ❤️";
+  let el=d
