@@ -1,43 +1,81 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html>
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>生日祝福网站</title>
-<style>
-*{box-sizing:border-box}body,html{margin:0;padding:0;width:100%;height:100%;font-family:Arial;background:#111;color:#fff;overflow:hidden}.scene{display:none;justify-content:center;align-items:center;flex-direction:column;width:100%;height:100%;position:absolute;inset:0;background-size:cover;background-position:center;padding:20px;text-align:center}.active{display:flex}.card,.box{background:rgba(0,0,0,.55);padding:24px;border-radius:20px;max-width:700px;width:100%}button{padding:10px 18px;border:none;border-radius:10px;margin:8px;cursor:pointer}.answers{display:grid;grid-template-columns:1fr 1fr;gap:10px}.cake{position:relative;width:220px;height:220px}.layer{position:absolute;left:50%;transform:translateX(-50%);border-radius:10px}.l1{bottom:0;width:220px;height:70px;background:#ff9ecf}.l2{bottom:60px;width:180px;height:60px;background:#ffd27f}.l3{bottom:110px;width:140px;height:50px;background:#9fe3ff}.candle{position:absolute;bottom:160px;left:50%;width:14px;height:40px;background:#fff;transform:translateX(-50%)}.flame{position:absolute;bottom:198px;left:50%;width:18px;height:24px;background:orange;border-radius:50% 50% 50% 50%;transform:translateX(-50%);animation:flicker .5s infinite alternate}@keyframes flicker{from{transform:translateX(-50%) scale(1)}to{transform:translateX(-50%) scale(1.15)}}.envelope{width:260px;height:180px;position:relative;cursor:pointer}.env-body{position:absolute;bottom:0;width:100%;height:120px;background:#f2d4d4}.env-top{position:absolute;top:0;border-left:130px solid transparent;border-right:130px solid transparent;border-top:90px solid #e8bcbc}.letter{position:absolute;left:20px;right:20px;bottom:10px;height:100px;background:#fff;color:#333;padding:10px;transition:all .8s}.open .letter{bottom:70px;height:150px}.bigmsg{font-size:2rem;animation:pop 1s infinite alternate}@keyframes pop{from{transform:scale(1)}to{transform:scale(1.08)}}</style>
-</head>
+  <meta charset="UTF-8">
+  <title>Happy Birthday</title>
+  <link rel="stylesheet" href="../css/normalizel.css">
+  <link rel="stylesheet" href="../css/stylel.css" media="screen" type="text/css" />
+
+  <style>
+    /* 1. 定义自定义字体 */
+    @font-face {
+        font-family: 'YuWeiFont';
+        src: url('../字体/禹卫书法行书简体.ttf');
+    }
+    
+    /* 2. 强制预加载字体 */
+    #font-preload {
+        font-family: 'YuWeiFont';
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    /* 3. 核心背景修复 */
+    body {
+        background-image: linear-gradient(rgba(10, 20, 40, 0.6), rgba(10, 20, 40, 0.6)), url('../img/雪树林.jpg') !important;
+        
+        /* 强制背景设置生效 */
+        background-size: cover !important;
+        background-position: center center !important;
+        background-repeat: no-repeat !important;
+        background-attachment: fixed !important;
+        
+        /* 强制背景色为透明，防止颜色遮挡图片 */
+        background-color: transparent !important; 
+        
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+    }
+
+    /* 4. 防止画布本身带有背景色 */
+    .canvas {
+        background: transparent !important;
+    }
+  </style>
+
 <body>
-<audio id='bgm' loop autoplay controls style='position:fixed;top:10px;right:10px;z-index:99'>
-<source src='your-music.mp3' type='audio/mpeg'>
-</audio>
-<div id='scene1' class='scene active' style='background-image:url(bg1.jpg)'>
-<div class='card'>
-<h1>欢迎，等你很久了~</h1>
-<h2 id='qTitle'></h2>
-<div id='answers' class='answers'></div>
-<p id='status'></p>
-</div></div>
-<div id='scene2' class='scene' style='background-image:url(bg2.jpg)'><div class='box'><h1>生日快乐 🎂</h1><div class='cake'><div class='layer l1'></div><div class='layer l2'></div><div class='layer l3'></div><div class='candle'></div><div class='flame'></div></div><button onclick='next(3)'>继续</button></div></div>
-<div id='scene3' class='scene' style='background-image:url(bg3.jpg)'><div class='box'><h1>给你的信</h1><div id='env' class='envelope' onclick='this.classList.toggle("open")'><div class='env-top'></div><div class='env-body'></div><div class='letter'>愿你被爱包围，天天开心，点击继续查看下一幕。</div></div><button onclick='next(4)'>继续</button></div></div>
-<div id='scene4' class='scene' style='background-image:url(bg4.jpg)'><div class='box'><h1>生日贺卡 💌</h1><p>愿新的一岁，所求皆如愿，所行皆坦途。</p><button onclick='next(5)'>最后一幕</button></div></div>
-<div id='scene5' class='scene' style='background-image:url(bg5.jpg)'><div class='box'><div class='bigmsg'>Happy Birthday!!! 🎉</div><p>愿你的未来闪闪发光。</p></div></div>
-<script>
-const qs=[
-{q:'我最想对你说？',a:['生日快乐','再见','无聊','睡觉'],c:0},
-{q:'一年有几个月？',a:['10','11','12','13'],c:2},
-{q:'生日蛋糕通常是？',a:['甜的','辣的','酸的','苦的'],c:0},
-{q:'太阳从哪边升起？',a:['东','西','南','北'],c:0},
-{q:'2+3=?',a:['4','5','6','7'],c:1},
-{q:'你今天是什么主角？',a:['寿星','路人','老师','司机'],c:0},
-{q:'爱笑的人通常？',a:['开心','消失','变小','停机'],c:0},
-{q:'彩虹常见几色？',a:['5','6','7','8'],c:2},
-{q:'祝福应该是？',a:['真诚','敷衍','沉默','忘记'],c:0},
-{q:'最后一题：你值得被？',a:['爱','骂','忽略','删除'],c:0}
-];let i=0;
-function render(){const q=qs[i];qTitle.innerText=`第${i+1}题：${q.q}`;answers.innerHTML='';q.a.forEach((t,idx)=>{let b=document.createElement('button');b.innerText=t;b.onclick=()=>pick(idx);answers.appendChild(b);});status.innerText='';}
-function pick(idx){if(idx===qs[i].c){status.innerText='答对啦！';i++;setTimeout(()=>{if(i<qs.length)render();else next(2);},500);}else status.innerText='答错了，再试试~';}
-function next(n){document.querySelectorAll('.scene').forEach(s=>s.classList.remove('active'));document.getElementById('scene'+n).classList.add('active');}
-render();
-</script>
-</body></html>
+<canvas class="canvas"></canvas>
+<div id="font-preload">载入字体中...</div>
+<div class="help">?</div> 
+
+<div class="ui">
+  <input class="ui-input" type="text" />
+  <span class="ui-return">↵</span>
+</div>
+
+<div class="overlay">
+  <div class="tabs">
+    <div class="tabs-labels"><span class="tabs-label">M</span><span class="tabs-label">E</span><span class="tabs-label">X</span></div>
+
+    <div class="tabs-panels">
+      <ul class="tabs-panel commands">
+        <li class="commands-item"><span class="commands-item-title">Text</span><span class="commands-item-info" data-demo="Hello :)">Type anything</span><span class="commands-item-action">Demo</span></li>
+        <li class="commands-item"><span class="commands-item-title">Countdown</span><span class="commands-item-info" data-demo="#countdown 10">#countdown<span class="commands-item-mode">number</span></span><span class="commands-item-action">Demo</span></li>
+        <li class="commands-item"><span class="commands-item-title">Time</span><span class="commands-item-info" data-demo="#time">#time</span><span class="commands-item-action">Demo</span></li>
+        <li class="commands-item"><span class="commands-item-title">Rectangle</span><span class="commands-item-info" data-demo="#rectangle 30x15">#rectangle<span class="commands-item-mode">width x height</span></span><span class="commands-item-action">Demo</span></li>
+        <li class="commands-item"><span class="commands-item-title">Circle</span><span class="commands-item-info" data-demo="#circle 25">#circle<span class="commands-item-mode">diameter</span></span><span class="commands-item-action">Demo</span></li>
+
+        <li class="commands-item commands-item--gap"><span class="commands-item-title">Animate</span><span class="commands-item-info" data-demo="The time is|#time|#countdown 3|#icon thumbs-up"><span class="commands-item-mode">command1</span>&nbsp;|<span class="commands-item-mode">command2</span></span><span class="commands-item-action">Demo</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+  <script src="../js/indexl.js"></script>
+  <audio src="../music/happy birthday.mp3" autoplay="autoplay" loop="loop"></audio>
+</body>
+
+</html>
