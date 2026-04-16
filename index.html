@@ -1,298 +1,43 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>生日惊喜 🎂</title>
-
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>生日祝福网站</title>
 <style>
-body {
-  margin: 0;
-  font-family: Arial;
-  overflow-x: hidden;
-  background: url("mmexport1737116990793.jpg") no-repeat center center/cover;
-  color: white;
-}
-
-/* ======================
-   🧠 题目页面
-====================== */
-.page {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  text-align: center;
-}
-
-.hidden { display: none; }
-
-#question {
-  text-shadow: 0 4px 12px rgba(0,0,0,0.7);
-}
-
-button {
-  padding: 12px;
-  margin: 8px;
-  border: none;
-  background: #ff4fa3;
-  color: white;
-  border-radius: 18px;
-  width: 80%;
-  max-width: 320px;
-}
-
-.correct { background: #2ecc71 !important; }
-.wrong { background: #e74c3c !important; }
-
-/* ======================
-   🎬 过渡页
-====================== */
-#transition {
-  background: black;
-  font-size: 28px;
-}
-
-/* ======================
-   📱 最后页（折叠滚动）
-====================== */
-.story-wrapper {
-  min-height: 100vh;
-  background: rgba(0,0,0,0.55);
-}
-
-.story {
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  padding: 40px;
-  text-align: center;
-
-  opacity: 0;
-  transform: translateY(80px) scale(0.95);
-  transition: 0.8s ease;
-
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-
-/* 展开状态 */
-.story.show {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-}
-
-.title {
-  font-size: 40px;
-  font-weight: bold;
-}
-
-.sub {
-  margin-top: 10px;
-  opacity: 0.8;
-}
-
-img, video {
-  width: 85%;
-  max-width: 400px;
-  border-radius: 15px;
-}
-
-/* ======================
-   💖 单爱心
-====================== */
-.heart {
-  position: fixed;
-  font-size: 22px;
-  pointer-events: none;
-  animation: float 1s ease-out forwards;
-}
-
-@keyframes float {
-  0% { opacity: 1; transform: scale(1); }
-  100% { opacity: 0; transform: translateY(-80px) scale(1.5); }
-}
-</style>
+*{box-sizing:border-box}body,html{margin:0;padding:0;width:100%;height:100%;font-family:Arial;background:#111;color:#fff;overflow:hidden}.scene{display:none;justify-content:center;align-items:center;flex-direction:column;width:100%;height:100%;position:absolute;inset:0;background-size:cover;background-position:center;padding:20px;text-align:center}.active{display:flex}.card,.box{background:rgba(0,0,0,.55);padding:24px;border-radius:20px;max-width:700px;width:100%}button{padding:10px 18px;border:none;border-radius:10px;margin:8px;cursor:pointer}.answers{display:grid;grid-template-columns:1fr 1fr;gap:10px}.cake{position:relative;width:220px;height:220px}.layer{position:absolute;left:50%;transform:translateX(-50%);border-radius:10px}.l1{bottom:0;width:220px;height:70px;background:#ff9ecf}.l2{bottom:60px;width:180px;height:60px;background:#ffd27f}.l3{bottom:110px;width:140px;height:50px;background:#9fe3ff}.candle{position:absolute;bottom:160px;left:50%;width:14px;height:40px;background:#fff;transform:translateX(-50%)}.flame{position:absolute;bottom:198px;left:50%;width:18px;height:24px;background:orange;border-radius:50% 50% 50% 50%;transform:translateX(-50%);animation:flicker .5s infinite alternate}@keyframes flicker{from{transform:translateX(-50%) scale(1)}to{transform:translateX(-50%) scale(1.15)}}.envelope{width:260px;height:180px;position:relative;cursor:pointer}.env-body{position:absolute;bottom:0;width:100%;height:120px;background:#f2d4d4}.env-top{position:absolute;top:0;border-left:130px solid transparent;border-right:130px solid transparent;border-top:90px solid #e8bcbc}.letter{position:absolute;left:20px;right:20px;bottom:10px;height:100px;background:#fff;color:#333;padding:10px;transition:all .8s}.open .letter{bottom:70px;height:150px}.bigmsg{font-size:2rem;animation:pop 1s infinite alternate}@keyframes pop{from{transform:scale(1)}to{transform:scale(1.08)}}</style>
 </head>
-
 <body>
-
-<!-- 🎬 开场后直接进入题目 -->
-<div id="quiz" class="page">
-  <h2 id="question"></h2>
-  <div id="options"></div>
-</div>
-
-<!-- 🎬 过渡 -->
-<div id="transition" class="page hidden">
-  <div id="transitionText"></div>
-</div>
-
-<!-- 🎂 最终页 -->
-<div id="birthday" class="hidden">
-
-  <div class="story-wrapper">
-
-    <div class="story">
-      <div class="title">生日快乐 🎂</div>
-      <div class="sub" id="typing"></div>
-    </div>
-
-    <div class="story">
-      <div class="title">祝福</div>
-      <div class="sub">愿你永远闪闪发光 ✨</div>
-    </div>
-
-    <div class="story">
-      <div class="title">回忆</div>
-      <img src="https://via.placeholder.com/400">
-    </div>
-
-    <div class="story">
-      <div class="title">视频</div>
-      <video controls>
-        <source src="your-video.mp4">
-      </video>
-    </div>
-
-  </div>
-
-</div>
-
+<audio id='bgm' loop autoplay controls style='position:fixed;top:10px;right:10px;z-index:99'>
+<source src='your-music.mp3' type='audio/mpeg'>
+</audio>
+<div id='scene1' class='scene active' style='background-image:url(bg1.jpg)'>
+<div class='card'>
+<h1>欢迎，等你很久了~</h1>
+<h2 id='qTitle'></h2>
+<div id='answers' class='answers'></div>
+<p id='status'></p>
+</div></div>
+<div id='scene2' class='scene' style='background-image:url(bg2.jpg)'><div class='box'><h1>生日快乐 🎂</h1><div class='cake'><div class='layer l1'></div><div class='layer l2'></div><div class='layer l3'></div><div class='candle'></div><div class='flame'></div></div><button onclick='next(3)'>继续</button></div></div>
+<div id='scene3' class='scene' style='background-image:url(bg3.jpg)'><div class='box'><h1>给你的信</h1><div id='env' class='envelope' onclick='this.classList.toggle("open")'><div class='env-top'></div><div class='env-body'></div><div class='letter'>愿你被爱包围，天天开心，点击继续查看下一幕。</div></div><button onclick='next(4)'>继续</button></div></div>
+<div id='scene4' class='scene' style='background-image:url(bg4.jpg)'><div class='box'><h1>生日贺卡 💌</h1><p>愿新的一岁，所求皆如愿，所行皆坦途。</p><button onclick='next(5)'>最后一幕</button></div></div>
+<div id='scene5' class='scene' style='background-image:url(bg5.jpg)'><div class='box'><div class='bigmsg'>Happy Birthday!!! 🎉</div><p>愿你的未来闪闪发光。</p></div></div>
 <script>
-
-/* ======================
-   🧠 题目
-====================== */
-const questions = [
-  { q:"我们是怎么认识的？", options:["上班🐄","实习🐎","搭讪😏","打乒乓球🏓","上课📖"], answer:2 },
-  { q:"我们认识的日期？", options:["5月12号","6月3号","4月17号","7月14号","不记得🤯"], answer:4 },
-  { q:"我的mbti？", options:["enfj","intp","infj","enfp","entp"], answer:3 },
-  { q:"我们在中国最常吃的食物是？", options:["螺狮粉","臭豆腐","姥姥下碗面","烧仙草","清汤粉"], answer:0 },
-  { q:"回来马来西亚后我们吃的第一家餐厅是？", options:["太二酸菜鱼","中国兰州拉面","Uno Sushi","Mr Wu","Shin Zushi"], answer:2 },
-  { q:"你陪我打游戏玩到凌晨的地方是？", options:["福州","龙岩","厦门","赣州","泉州"], answer:1 },
-  { q:"我们一起去过哪里旅行？", options:["泉州","厦门","漳州","福州","赣州"], answer:4 },
-  { q:"我的身高？", options:["163。1","163.2","163.3","163.4","163.5"], answer:3 },
-  { q:"你放工后最想干嘛？", options:["直奔老巢","狠狠睡觉","刷剧","啥也不干","跟我一起玩"], answer:4 },
-  { q:"臭豆腐有几种口味？", options:["10","13","15","9","7"], answer:2 }
-];
-
-let current = 0;
-
-function loadQuestion(){
-  const q = questions[current];
-
-  type(q.q, question, 140);
-
-  options.innerHTML = "";
-
-  q.options.forEach((opt,i)=>{
-    let btn=document.createElement("button");
-    btn.innerText=opt;
-    btn.onclick=()=>check(btn,i);
-    options.appendChild(btn);
-  });
-}
-
-function type(text, el, speed){
-  el.innerHTML="";
-  let i=0;
-  let t=setInterval(()=>{
-    el.innerHTML+=text[i];
-    i++;
-    if(i>=text.length) clearInterval(t);
-  },speed);
-}
-
-function check(btn,i){
-  if(i===questions[current].answer){
-    btn.classList.add("correct");
-
-    setTimeout(()=>{
-      current++;
-      if(current<questions.length){
-        loadQuestion();
-      }else{
-        showTransition();
-      }
-    },400);
-  }else{
-    btn.classList.add("wrong");
-    setTimeout(()=>btn.classList.remove("wrong"),400);
-  }
-}
-
-/* ======================
-   🎬 过渡
-====================== */
-function showTransition(){
-  quiz.classList.add("hidden");
-  transition.classList.remove("hidden");
-
-  type("生日快乐 🎂", transitionText, 120);
-
-  setTimeout(()=>{
-    transition.classList.add("hidden");
-    birthday.classList.remove("hidden");
-    startTyping();
-    revealStories();
-  },2000);
-}
-
-/* ======================
-   ✍️ 打字
-====================== */
-function startTyping(){
-  let text="愿你未来每一天都比今天更快乐 ❤️";
-  let el=document.getElementById("typing");
-  let i=0;
-
-  let t=setInterval(()=>{
-    el.innerHTML+=text[i];
-    i++;
-    if(i>=text.length) clearInterval(t);
-  },90);
-}
-
-/* ======================
-   📱 滚动折叠展开
-====================== */
-function revealStories(){
-  const items=document.querySelectorAll(".story");
-
-  function check(){
-    items.forEach(el=>{
-      if(el.getBoundingClientRect().top < window.innerHeight*0.8){
-        el.classList.add("show");
-      }
-    });
-  }
-
-  window.addEventListener("scroll",check);
-  check();
-}
-
-/* ======================
-   💖 单颗爱心
-====================== */
-document.addEventListener("click",e=>{
-  let h=document.createElement("div");
-  h.className="heart";
-  h.innerHTML="💖";
-  h.style.left=e.clientX+"px";
-  h.style.top=e.clientY+"px";
-  document.body.appendChild(h);
-  setTimeout(()=>h.remove(),1000);
-});
-
-/* ======================
-   初始化
-====================== */
-loadQuestion();
-
+const qs=[
+{q:'我最想对你说？',a:['生日快乐','再见','无聊','睡觉'],c:0},
+{q:'一年有几个月？',a:['10','11','12','13'],c:2},
+{q:'生日蛋糕通常是？',a:['甜的','辣的','酸的','苦的'],c:0},
+{q:'太阳从哪边升起？',a:['东','西','南','北'],c:0},
+{q:'2+3=?',a:['4','5','6','7'],c:1},
+{q:'你今天是什么主角？',a:['寿星','路人','老师','司机'],c:0},
+{q:'爱笑的人通常？',a:['开心','消失','变小','停机'],c:0},
+{q:'彩虹常见几色？',a:['5','6','7','8'],c:2},
+{q:'祝福应该是？',a:['真诚','敷衍','沉默','忘记'],c:0},
+{q:'最后一题：你值得被？',a:['爱','骂','忽略','删除'],c:0}
+];let i=0;
+function render(){const q=qs[i];qTitle.innerText=`第${i+1}题：${q.q}`;answers.innerHTML='';q.a.forEach((t,idx)=>{let b=document.createElement('button');b.innerText=t;b.onclick=()=>pick(idx);answers.appendChild(b);});status.innerText='';}
+function pick(idx){if(idx===qs[i].c){status.innerText='答对啦！';i++;setTimeout(()=>{if(i<qs.length)render();else next(2);},500);}else status.innerText='答错了，再试试~';}
+function next(n){document.querySelectorAll('.scene').forEach(s=>s.classList.remove('active'));document.getElementById('scene'+n).classList.add('active');}
+render();
 </script>
-
-</body>
-</html>
+</body></html>
